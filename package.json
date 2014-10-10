@@ -1,0 +1,9 @@
+{
+  "name": "game-gw-server",
+  "version": "0.0.1",
+  "description": "server websocket gaming lolz",
+  "dependencies": {
+    "socket.io": "~1.0.4",
+    "express": "~4.4.1"
+  }
+}
