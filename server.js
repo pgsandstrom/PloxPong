@@ -20,7 +20,7 @@ io.on('connection', function (socket) {
 
 	console.log("connection: " + socket.id);
 
-	game.addPlayer();
+	game.addPlayer(io);
 
 //	socket.on('chat message', function (msg) {
 //		io.emit('chat message', msg);

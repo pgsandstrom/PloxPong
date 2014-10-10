@@ -1,6 +1,7 @@
 var boardCreator = require('./board.js');
 
-var Game = function Game() {
+var Game = function Game(io) {
+	this.io = io;
 	this.players = 0;
 	this.board = boardCreator.createBoard();
 };
@@ -24,6 +25,8 @@ Game.prototype.tic = function () {
 	console.log("tic");
 	this.board.update();
 
+	this.io.emit('update', this.board.getJson());
+
 	var game = this; //TODO: necessary?
 	setTimeout(function () {
 		if (game.players > 0) {
@@ -40,9 +43,9 @@ var action = function () {
 	console.log("omg action");
 };
 
-var addPlayer = function () {
+var addPlayer = function (io) {
 	if (game === undefined) {
-		game = new Game();
+		game = new Game(io);
 	}
 	game.addPlayer();
 };

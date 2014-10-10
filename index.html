@@ -21,6 +21,11 @@
 //		$('#messages').append($('<li>').text(msg));
 	});
 
+	socket.on('update', function (msg) {
+		console.log("received update: " + msg);
+		ploxpong.render(msg);
+	});
+
 	socket.emit('chat message', "rofl");
 </script>
 </body>
