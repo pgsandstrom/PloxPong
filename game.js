@@ -34,7 +34,7 @@ Game.prototype.tic = function () {
 		} else {
 			console.log("stopping tic");
 		}
-	}, 100);
+	}, 1000);
 };
 
 var game;

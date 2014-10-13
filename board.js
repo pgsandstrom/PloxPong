@@ -1,10 +1,12 @@
 var Board = function Board() {
 	this.ball = new Ball();
 	this.points = [];
-	this.points.push(new Point(0, 0));
-	this.points.push(new Point(0, 500));
-	this.points.push(new Point(500, 500));
-	this.points.push(new Point(500, 0));
+	var max = 480;
+	var min = 20;
+	this.points.push(new Point(min, min));
+	this.points.push(new Point(min, max));
+	this.points.push(new Point(max, max));
+	this.points.push(new Point(max, min));
 };
 
 Board.prototype.update = function () {

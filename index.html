@@ -23,7 +23,8 @@
 
 	socket.on('update', function (msg) {
 		console.log("received update: " + msg);
-		ploxpong.render(msg);
+		var object = $.parseJSON(msg)
+		ploxpong.render(object);
 	});
 
 	socket.emit('chat message', "rofl");
