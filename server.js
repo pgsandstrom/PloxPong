@@ -13,22 +13,28 @@ app.get('/css/main.css', function (req, res) {
 app.get('/js/rendering.js', function (req, res) {
 	res.sendfile('js/rendering.js');
 });
+app.get('/js/gameLocal.js', function (req, res) {
+	res.sendfile('js/gameLocal.js');
+});
 //-------
 
 
 io.on('connection', function (socket) {
+	var playerId = socket.id;
 
-	console.log("connection: " + socket.id);
 
-	game.addPlayer(io);
+	console.log("connection: " + playerId);
 
-//	socket.on('chat message', function (msg) {
-//		io.emit('chat message', msg);
-//	});
+	game.addPlayer(io, playerId);
+
+	socket.on('position', function (position) {
+//		console.log('position: ' + position);
+		game.updatePosition(playerId, position);
+	});
 //
 	socket.on('disconnect', function () {
-		console.log("disconnect: " + socket.id);
-		game.removePlayer();
+		console.log("disconnect: " + playerId);
+		game.removePlayer(playerId);
 	});
 });
 
