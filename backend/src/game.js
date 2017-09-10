@@ -9,33 +9,35 @@ class Game {
         x: 300,
         y: 100,
       },
-      points: [
-        {
-          x: 0,
-          y: 0,
-        },
-        {
-          x: 300,
-          y: 0,
-        },
-        {
-          x: 300,
-          y: 300,
-        },
-        {
-          x: 0,
-          y: 300,
-        },
+      lines: [
+        [[
+          0, 0,
+        ], [
+          300, 0,
+        ]],
+        [[
+          300, 0,
+        ], [
+          300, 300,
+        ]],
+        [[
+          300, 300,
+        ], [
+          0, 300,
+        ]],
+        [[
+          0, 300,
+        ], [
+          0, 0,
+        ]],
       ],
     };
   }
 
   updateGame() {
     this.board.ball.x += 1;
-    this.board.points.forEach((point, index) => {
-      const otherPoint = index === 0 ? this.board.points[this.board.points.length - 1] : this.board.points[index - 1];
-      // const isColling = isLineCircleColliding(point.x, point.y, otherPoint.x, otherPoint.y, this.board.ball.x, this.board.ball.y, 5);
-      const isColling = isLineCircleCollide([point.x, point.y], [otherPoint.x, otherPoint.y], [this.board.ball.x, this.board.ball.y], 5);
+    this.board.lines.forEach((line) => {
+      const isColling = isLineCircleCollide(line[0], line[1], [this.board.ball.x, this.board.ball.y], 5);
       if (isColling) {
         console.log('omg collide');
       } else {

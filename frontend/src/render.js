@@ -8,24 +8,20 @@ export default (board) => {
   ctx.fill();
 
   if (board !== undefined) {
-    renderPoints(board.points);
+    renderLines(board.lines);
     renderBall(board.ball);
   }
 };
 
-const renderPoints = (points) => {
-  let first = true;
-  points.forEach((point) => {
-    if (first) {
-      ctx.fillStyle = 'rgb(255,255,255)';
-      ctx.beginPath();
-      ctx.moveTo(point.x, point.y);
-      first = false;
-    } else {
-      ctx.lineTo(point.x, point.y);
-    }
+const renderLines = (lines) => {
+  lines.forEach((line) => {
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'orange';
+    ctx.beginPath();
+    ctx.moveTo(line[0][0], line[0][1]);
+    ctx.lineTo(line[1][0], line[1][1]);
+    ctx.stroke();
   });
-  ctx.fill();
 };
 
 const renderBall = (ball) => {
