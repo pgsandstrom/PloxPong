@@ -1,4 +1,7 @@
-import { isLineCircleCollide } from './geography';
+/* eslint-disable no-param-reassign */
+
+// import { isLineCircleCollide } from './geography';
+import { bounceCircle } from './trig';
 
 class Game {
   constructor(socket) {
@@ -6,45 +9,61 @@ class Game {
     this.running = false;
     this.board = {
       ball: {
-        x: 250,
-        y: 100,
-        velocity: [1, 0],
+        center: {
+          x: 250.01,
+          y: 100.01,
+        },
+        radius: 5,
+        velocity: { x: 1, y: 0 },
       },
       lines: [
-        [[
-          0, 0,
-        ], [
-          300, 0,
-        ]],
-        [[
-          300, 0,
-        ], [
-          300, 300,
-        ]],
-        [[
-          300, 300,
-        ], [
-          0, 300,
-        ]],
-        [[
-          0, 300,
-        ], [
-          0, 0,
-        ]],
+        { a: {
+          x: 0, y: 0,
+        },
+        b: {
+          x: 300, y: 0,
+        } },
+        { a: {
+          x: 300, y: 0,
+        },
+        b: {
+          x: 300, y: 300,
+        } },
+        { a: {
+          x: 300, y: 300,
+        },
+        b: {
+          x: 0, y: 300,
+        } },
+        { a: {
+          x: 0, y: 300,
+        },
+        b: {
+          x: 0, y: 0,
+        } },
       ],
     };
   }
 
   updateGame() {
-    this.board.ball.x += this.board.ball.velocity[0];
-    this.board.ball.y += this.board.ball.velocity[1];
+    this.board.ball.center.x += this.board.ball.velocity.x;
+    this.board.ball.center.y += this.board.ball.velocity.y;
     this.board.lines.forEach((line) => {
-      const isColling = isLineCircleCollide(line[0], line[1], [this.board.ball.x, this.board.ball.y], 5);
-      if (isColling) {
-        console.log('omg collide');
-      } else {
-        // console.log('NOOOO omg collide');
-      }
+      // const isColling = isLineCircleCollide(line[0], line[1], [this.board.ball.x, this.board.ball.y], 5);
+      const yDiff = (line.b.y - line.a.y);
+      const xDiff = (line.b.x - line.a.x);
+      line.angle = Math.atan(yDiff / xDiff);
+      line.len = Math.sqrt((yDiff * yDiff) + (xDiff * xDiff));
+      line.center = {};
+      line.center.x = line.a.x;
+      line.center.y = line.a.y;
+
+      bounceCircle(this.board.ball, line);
+      // if (isColling) {
+      //   console.log('omg collide');
+      // } else {
+      // console.log('NOOOO omg collide');
+      // }
     });
   }
 

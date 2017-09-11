@@ -1,20 +1,20 @@
 /* eslint-disable no-param-reassign */
 
 export const bounceCircle = (circle, line) => {
-  const bounceLineNormal = bounceLineNormal(circle, line);
-
+  const bounceLineNormal = getBounceLineNormal(circle, line);
 
   const dot = dotProduct(circle.velocity, bounceLineNormal);
-  circle.velocity.x -= 2 * dot * bounceLineNormal.x;
-  circle.velocity.y -= 2 * dot * bounceLineNormal.y;
 
-
-  while (isLineIntersectingCircle(circle, line)) {
-    moveCircle(circle);
+  if (isLineIntersectingCircle(circle, line)) {
+    circle.velocity.x -= 2 * dot * bounceLineNormal.x;
+    circle.velocity.y -= 2 * dot * bounceLineNormal.y;
+    do {
+      moveCircle(circle);
+    } while (isLineIntersectingCircle(circle, line));
   }
 };
 
-export const bounceLineNormal = (circle, line) => {
+export const getBounceLineNormal = (circle, line) => {
   const circleToClosestPointOnLineVector =
     vectorBetween(
       pointOnLineClosestToCircle(circle, line),
@@ -71,14 +71,10 @@ export const lineEndPoints = (line) => {
 
 
   return [
-
-
     {
       x: line.center.x + endOffsetFromCenterVector.x,
       y: line.center.y + endOffsetFromCenterVector.y,
     },
-
-
     {
       x: line.center.x - endOffsetFromCenterVector.x,
       y: line.center.y - endOffsetFromCenterVector.y,
@@ -88,8 +84,10 @@ export const lineEndPoints = (line) => {
 
 
 export const pointOnLineClosestToCircle = (circle, line) => {
-  const lineEndPoint1 = lineEndPoints(line)[0];
-  const lineEndPoint2 = lineEndPoints(line)[1];
+  // const lineEndPoint1 = lineEndPoints(line)[0];
+  // const lineEndPoint2 = lineEndPoints(line)[1];
+  const lineEndPoint1 = { x: line.a.x, y: line.a.y };
+  const lineEndPoint2 = { x: line.b.x, y: line.b.y };
 
 
   const lineUnitVector = unitVector(
