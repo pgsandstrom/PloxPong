@@ -1,11 +1,9 @@
 /* eslint-disable no-param-reassign */
 
 export const bounceCircle = (circle, line) => {
-  const bounceLineNormal = getBounceLineNormal(circle, line);
-
-  const dot = dotProduct(circle.velocity, bounceLineNormal);
-
   if (isLineIntersectingCircle(circle, line)) {
+    const bounceLineNormal = getBounceLineNormal(circle, line);
+    const dot = dotProduct(circle.velocity, bounceLineNormal);
     circle.velocity.x -= 2 * dot * bounceLineNormal.x;
     circle.velocity.y -= 2 * dot * bounceLineNormal.y;
     do {

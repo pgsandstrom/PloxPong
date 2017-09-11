@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 // import { isLineCircleCollide } from './geography';
-import { bounceCircle } from './trig';
+import { bounceCircle, isLineIntersectingCircle, pointOnLineClosestToCircle } from './trig';
 
 class Game {
   constructor(socket) {
@@ -65,8 +65,9 @@ class Game {
   }
 
   updateGame() {
-    this.board.ball.center.x += this.board.ball.velocity.x;
-    this.board.ball.center.y += this.board.ball.velocity.y;
+    const ball = this.board.ball;
+    ball.center.x += ball.velocity.x;
+    ball.center.y += ball.velocity.y;
     this.board.lines.forEach((line) => {
       const yDiff = (line.b.y - line.a.y);
       const xDiff = (line.b.x - line.a.x);
@@ -76,14 +77,20 @@ class Game {
       line.center.x = line.a.x;
       line.center.y = line.a.y;
 
-      bounceCircle(this.board.ball, line);
+      bounceCircle(ball, line);
     });
+
+    const player = this.board.lines[0].player;
+    if (isLineIntersectingCircle(ball, player)) {
+      const closestPoint = pointOnLineClosestToCircle(ball, player);
+      // TODO figure out how to get new angle and all that stuff...
+    }
   }
 
   updatePosition(x, y) {
     const player = this.board.lines[0].player;
     player.a.y = y;
-    player.b.y = y+30;
+    player.b.y = y + 30;
   }
 
   sendUpdate() {
