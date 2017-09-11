@@ -21,30 +21,45 @@ class Game {
         velocity: { x: 1, y: 0 },
       },
       lines: [
-        { a: {
-          x: 0, y: 0,
+        {
+          player: {
+            a: {
+              x: 30, y: 0,
+            },
+            b: {
+              x: 30, y: 30,
+            },
+          },
+          a: {
+            x: 0, y: 0,
+          },
+          b: {
+            x: 300, y: 0,
+          },
         },
-        b: {
-          x: 300, y: 0,
-        } },
-        { a: {
-          x: 300, y: 0,
+        {
+          a: {
+            x: 300, y: 0,
+          },
+          b: {
+            x: 300, y: 300,
+          } },
+        {
+          a: {
+            x: 300, y: 300,
+          },
+          b: {
+            x: 0, y: 300,
+          },
         },
-        b: {
-          x: 300, y: 300,
-        } },
-        { a: {
-          x: 300, y: 300,
+        {
+          a: {
+            x: 0, y: 300,
+          },
+          b: {
+            x: 0, y: 0,
+          },
         },
-        b: {
-          x: 0, y: 300,
-        } },
-        { a: {
-          x: 0, y: 300,
-        },
-        b: {
-          x: 0, y: 0,
-        } },
       ],
     };
   }
@@ -53,7 +68,6 @@ class Game {
     this.board.ball.center.x += this.board.ball.velocity.x;
     this.board.ball.center.y += this.board.ball.velocity.y;
     this.board.lines.forEach((line) => {
-      // const isColling = isLineCircleCollide(line[0], line[1], [this.board.ball.x, this.board.ball.y], 5);
       const yDiff = (line.b.y - line.a.y);
       const xDiff = (line.b.x - line.a.x);
       line.angle = Math.atan(yDiff / xDiff);
@@ -63,16 +77,13 @@ class Game {
       line.center.y = line.a.y;
 
       bounceCircle(this.board.ball, line);
-      // if (isColling) {
-      //   console.log('omg collide');
-      // } else {
-      // console.log('NOOOO omg collide');
-      // }
     });
   }
 
   updatePosition(x, y) {
-    // TODO
+    const player = this.board.lines[0].player;
+    player.a.y = y;
+    player.b.y = y+30;
   }
 
   sendUpdate() {

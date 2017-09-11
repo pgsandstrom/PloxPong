@@ -1,9 +1,7 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-export const getCanvas = () => {
-  return canvas;
-};
+export const getCanvas = () => canvas;
 
 export const render = (board) => {
   // fill with black:
@@ -19,13 +17,20 @@ export const render = (board) => {
 
 const renderLines = (lines) => {
   lines.forEach((line) => {
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'orange';
-    ctx.beginPath();
-    ctx.moveTo(line.a.x, line.a.y);
-    ctx.lineTo(line.b.x, line.b.y);
-    ctx.stroke();
+    renderLine(line);
+    if (line.player) {
+      renderLine(line.player);
+    }
   });
+};
+
+const renderLine = (line) => {
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'orange';
+  ctx.beginPath();
+  ctx.moveTo(line.a.x, line.a.y);
+  ctx.lineTo(line.b.x, line.b.y);
+  ctx.stroke();
 };
 
 const renderBall = (ball) => {
