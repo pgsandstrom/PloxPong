@@ -1,7 +1,11 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-export default (board) => {
+export const getCanvas = () => {
+  return canvas;
+};
+
+export const render = (board) => {
   // fill with black:
   ctx.fillStyle = 'rgb(0,0,0)';
   ctx.fillRect(0, 0, 500, 500);

@@ -1,4 +1,4 @@
-import { startGame, stopGame } from './gameHolder';
+import { startGame, stopGame, updatePosition } from './gameHolder';
 
 // const activeSockets = {};
 
@@ -8,9 +8,9 @@ export default (io) => {
     startGame(socket);
 
     // activeSockets[socket.id] = {};
-    // socket.on('setId', (data) => {
-    //   socket.emit('load', data);
-    // });
+    socket.on('position', (data) => {
+      updatePosition(socket, data.x, data.y);
+    });
     socket.on('disconnect', () => {
       console.log('disconnect');
       stopGame(socket);

@@ -71,6 +71,10 @@ class Game {
     });
   }
 
+  updatePosition(x, y) {
+    // TODO
+  }
+
   sendUpdate() {
     this.socket.emit('board', this.board);
   }

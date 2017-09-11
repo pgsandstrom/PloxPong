@@ -2,7 +2,7 @@
 import socketio from 'socket.io-client';
 
 import serverUrl from './serverUrl';
-import render from './render';
+import { render } from './render';
 
 let websocket;
 
@@ -27,6 +27,10 @@ export const createWebsocket = () => {
 
 export const getWebsocket = () => websocket;
 
-export const sendEvent = (event, content, cb) => {
+export const sendPosition = (x, y) => {
+  sendEvent('position', { x, y });
+};
+
+const sendEvent = (event, content, cb) => {
   websocket.emit(event, content, cb);
 };

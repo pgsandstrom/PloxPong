@@ -15,3 +15,8 @@ export const stopGame = (socket) => {
   game.stop();
   socketIdToGame[socket.id] = {};
 };
+
+export const updatePosition = (socket, x, y) => {
+  const game = socketIdToGame[socket.id];
+  game.updatePosition(x,y);
+};
