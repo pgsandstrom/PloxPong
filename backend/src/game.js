@@ -6,8 +6,9 @@ class Game {
     this.running = false;
     this.board = {
       ball: {
-        x: 300,
+        x: 250,
         y: 100,
+        velocity: [1, 0],
       },
       lines: [
         [[
@@ -35,7 +36,8 @@ class Game {
   }
 
   updateGame() {
-    this.board.ball.x += 1;
+    this.board.ball.x += this.board.ball.velocity[0];
+    this.board.ball.y += this.board.ball.velocity[1];
     this.board.lines.forEach((line) => {
       const isColling = isLineCircleCollide(line[0], line[1], [this.board.ball.x, this.board.ball.y], 5);
       if (isColling) {
@@ -71,10 +73,6 @@ class Game {
 
   stop() {
     this.running = false;
-  }
-
-  hello() {
-    console.log('hello');
   }
 }
 

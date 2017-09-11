@@ -1,5 +1,19 @@
 /* eslint-disable no-param-reassign */
 
+export const getNewVector = (vector, line) => {
+  // const lineNormal = [
+  //   [
+  //     line[0][0],
+  //     -line[0][1],
+  //   ],
+  //   [
+  //     -line[1][0],
+  //     line[1][1],
+  //   ],
+  // ];
+
+};
+
 export const isLineCircleCollide = (a, b, circle, radius, nearest) => {
   // check to see if start or end points lie within circle
   if (isPointCircleCollision(a, circle, radius)) {
