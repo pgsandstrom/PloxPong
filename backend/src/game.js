@@ -7,6 +7,10 @@ class Game {
   constructor(socket) {
     this.socket = socket;
     this.running = false;
+    this.msBetweenFrame = 15;
+    this.speed = 10;
+    this.startTime = null;
+    this.turn = 0;
     this.board = {
       ball: {
         center: {
@@ -73,21 +77,32 @@ class Game {
 
   start() {
     console.log('start');
+    this.startTime = Date.now();
     this.running = true;
     this.cycle();
   }
 
   cycle() {
-    this.updateGame();
+    this.turn += 1;
+    let cycles = this.speed;
+    while (cycles > 0) {
+      this.updateGame();
+      cycles -= 1;
+    }
+
     this.sendUpdate();
+
+    const currentTime = Date.now();
+    const nextTime = this.startTime + (this.turn * this.msBetweenFrame);
+    const sleepTime = nextTime - currentTime;
+
     setTimeout(() => {
-      // console.log('cycle timeout');
       if (this.running) {
         this.cycle();
       } else {
         console.log('finished');
       }
-    }, 33);
+    }, sleepTime);
   }
 
   stop() {
