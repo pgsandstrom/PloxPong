@@ -1,4 +1,4 @@
-import { getNewVector} from '../src/geography';
+import { getNewVector } from '../src/geography';
 
 
-getNewVector([0,1], [[0,0],[1,1]]);
+getNewVector([0, 1], [[0, 0], [1, 1]]);

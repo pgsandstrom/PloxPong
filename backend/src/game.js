@@ -1,14 +1,18 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-param-reassign,no-console */
 
-// import { isLineCircleCollide } from './geography';
-import { bounceCircle, isLineIntersectingCircle, pointOnLineClosestToCircle } from './trig';
+import {
+  bounceCircle,
+  isLineIntersectingCircle,
+  pointOnLineClosestToCircle,
+  dotToDotDistance,
+} from './trig';
 
 class Game {
   constructor(socket) {
     this.socket = socket;
     this.running = false;
     this.msBetweenFrame = 15;
-    this.speed = 10;
+    this.speed = 5;
     this.startTime = null;
     this.turn = 0;
     this.board = {
@@ -81,9 +85,28 @@ class Game {
     });
 
     const player = this.board.lines[0].player;
+    this.checkPlayerCollision(ball, player);
+  }
+
+  checkPlayerCollision(ball, player) {
     if (isLineIntersectingCircle(ball, player)) {
       const closestPoint = pointOnLineClosestToCircle(ball, player);
-      // TODO figure out how to get new angle and all that stuff...
+      isLineIntersectingCircle(ball, player);
+      const distanceToPlayerLeft = dotToDotDistance(closestPoint, player.a);
+      const playerLength = dotToDotDistance(player.a, player.b);
+      let percentage = distanceToPlayerLeft / playerLength;
+      percentage = Math.min(percentage, 0.8);
+      percentage = Math.max(percentage, 0.2);
+      let playerDegree = Math.atan2(player.b.y - player.a.y, player.b.x - player.a.x);
+      if (playerDegree < 0) {
+        playerDegree += Math.PI * 2;
+      }
+      playerDegree += (Math.PI * percentage) + Math.PI;
+
+      const xForce = Math.cos(playerDegree);
+      const yForce = Math.sin(playerDegree);
+      ball.velocity.x = xForce;
+      ball.velocity.y = yForce;
     }
   }
 

@@ -82,6 +82,8 @@ export const lineEndPoints = (line) => {
 
 
 export const pointOnLineClosestToCircle = (circle, line) => {
+  line.len = dotToDotDistance(line.a, line.b);
+
   // const lineEndPoint1 = lineEndPoints(line)[0];
   // const lineEndPoint2 = lineEndPoints(line)[1];
   const lineEndPoint1 = { x: line.a.x, y: line.a.y };
@@ -110,6 +112,11 @@ export const pointOnLineClosestToCircle = (circle, line) => {
   }
 };
 
+export const dotToDotDistance = (dot1, dot2) => {
+  const xDiff = dot1.x - dot2.x;
+  const yDiff = dot1.y - dot2.y;
+  return Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
+};
 
 export const isLineIntersectingCircle = (circle, line) => {
   const closest = pointOnLineClosestToCircle(circle, line);
