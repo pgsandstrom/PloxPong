@@ -33,6 +33,8 @@ class Game {
             b: {
               x: 30, y: 30,
             },
+            name: 'Anon',
+            score: 0,
           },
           a: {
             x: 0, y: 0,
@@ -73,19 +75,37 @@ class Game {
     ball.center.x += ball.velocity.x;
     ball.center.y += ball.velocity.y;
     this.board.lines.forEach((line) => {
-      const yDiff = (line.b.y - line.a.y);
-      const xDiff = (line.b.x - line.a.x);
-      line.angle = Math.atan(yDiff / xDiff);
-      line.len = Math.sqrt((yDiff * yDiff) + (xDiff * xDiff));
-      line.center = {};
-      line.center.x = line.a.x;
-      line.center.y = line.a.y;
-
-      bounceCircle(ball, line);
+      this.checkLineCollision(ball, line);
     });
 
     const player = this.board.lines[0].player;
     this.checkPlayerCollision(ball, player);
+  }
+
+  checkLineCollision(ball, line) {
+    const yDiff = (line.b.y - line.a.y);
+    const xDiff = (line.b.x - line.a.x);
+    line.angle = Math.atan(yDiff / xDiff);
+    line.len = Math.sqrt((yDiff * yDiff) + (xDiff * xDiff));
+    line.center = {};
+    line.center.x = line.a.x;
+    line.center.y = line.a.y;
+
+    const collision = bounceCircle(ball, line);
+    if (collision && line.player) {
+      this.playerDeath(line.player);
+    }
+  }
+
+  playerDeath(deadPlayer) {
+    deadPlayer.score = 0;
+    this.board.lines.forEach((line) => {
+      if (line.player) {
+        if (line.player !== deadPlayer) {
+          line.player.score += 1;
+        }
+      }
+    });
   }
 
   checkPlayerCollision(ball, player) {

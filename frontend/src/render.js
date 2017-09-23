@@ -4,6 +4,8 @@ const ctx = canvas.getContext('2d');
 export const getCanvas = () => canvas;
 
 export const render = (board) => {
+  renderScore(board);
+
   // fill with black:
   ctx.fillStyle = 'rgb(0,0,0)';
   ctx.fillRect(0, 0, 500, 500);
@@ -13,6 +15,14 @@ export const render = (board) => {
     renderLines(board.lines);
     renderBall(board.ball);
   }
+};
+
+// TODO make in a non-nooby way
+const renderScore = (board) => {
+  const scoreString = board.lines.filter(line => line.player)
+    .map(line => line.player.score)
+    .reduce((acc, item) => `${acc}\n${item}`);
+  document.getElementById('scoreList').innerHTML = scoreString;
 };
 
 const renderLines = (lines) => {

@@ -9,6 +9,9 @@ export const bounceCircle = (circle, line) => {
     do {
       moveCircle(circle);
     } while (isLineIntersectingCircle(circle, line));
+    return true;
+  } else {
+    return false;
   }
 };
 
