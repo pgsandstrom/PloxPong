@@ -1,22 +1,48 @@
 import Game from './game';
 
-const socketIdToGame = {};
+class GameHolder {
+  constructor() {
+    this.socketIdToSocket = {};
+    this.game = new Game(this);
+  }
 
-export const startGame = (socket) => {
-  // console.log(`starting ${socket.id}`);
-  const game = new Game(socket);
-  socketIdToGame[socket.id] = game;
-  game.start();
-};
+  startGame() {
+    this.game.start();
+  }
 
-export const stopGame = (socket) => {
-  // console.log(`stopping ${socket.id}`);
-  const game = socketIdToGame[socket.id];
-  game.stop();
-  socketIdToGame[socket.id] = {};
-};
+  addPlayer(socket) {
+    this.socketIdToSocket[socket.id] = socket;
+    this.game.addPlayer(socket.id);
+    if (this.getPlayerCount() === 1) {
+      this.startGame();
+    }
+  }
 
-export const updatePosition = (socket, x, y) => {
-  const game = socketIdToGame[socket.id];
-  game.updatePosition(x,y);
-};
+  removePlayer(socket) {
+    delete this.socketIdToSocket[socket.id];
+    this.game.removePlayer(socket.id);
+    if (this.getPlayerCount() === 0) {
+      this.stopGame();
+    }
+  }
+
+  stopGame() {
+    this.game.stop();
+  }
+
+  updatePosition(socket, x, y) {
+    this.game.updatePosition(socket.id, x, y);
+  }
+
+  getPlayerCount() {
+    return Object.keys(this.socketIdToSocket).length;
+  }
+
+  emit(board) {
+    Object.values(this.socketIdToSocket).forEach((socket) => {
+      socket.emit('board', board);
+    });
+  }
+}
+
+export default GameHolder;

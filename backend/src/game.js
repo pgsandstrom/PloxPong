@@ -7,12 +7,36 @@ import {
   dotToDotDistance,
 } from './trig';
 
+const potentialPlayers = [{
+  a: {
+    x: 30, y: 0,
+  },
+  b: {
+    x: 30, y: 30,
+  },
+  name: 'Anon',
+  id: 'abc',
+  score: 0,
+},
+{
+  a: {
+    x: 200, y: 0,
+  },
+  b: {
+    x: 200, y: 30,
+  },
+  name: 'Anon',
+  id: 'abc',
+  score: 0,
+},
+];
+
 class Game {
-  constructor(socket) {
-    this.socket = socket;
+  constructor(gameHolder) {
+    this.gameHolder = gameHolder;
     this.running = false;
     this.msBetweenFrame = 15;
-    this.speed = 5;
+    this.speed = 3;
     this.startTime = null;
     this.turn = 0;
     this.board = {
@@ -26,16 +50,7 @@ class Game {
       },
       lines: [
         {
-          player: {
-            a: {
-              x: 30, y: 0,
-            },
-            b: {
-              x: 30, y: 30,
-            },
-            name: 'Anon',
-            score: 0,
-          },
+          player: null,
           a: {
             x: 0, y: 0,
           },
@@ -70,6 +85,34 @@ class Game {
     };
   }
 
+  addPlayer(playerId) {
+    const currentPlayerCount = this.getPlayerCount();
+    const newPlayer = {
+      ...potentialPlayers[currentPlayerCount],
+      id: playerId,
+    };
+    // TODO: Check the first spot that is free instead...
+    switch (currentPlayerCount) {
+      case 0:
+        this.board.lines[1].player = newPlayer;
+        break;
+      case 1:
+        this.board.lines[3].player = newPlayer;
+        break;
+      default:
+        throw new Error('wtf');
+    }
+  }
+
+  removePlayer(playerId) {
+    const activePlayerIndex = this.board.lines.findIndex(line => line.player && line.player.id === playerId);
+    delete this.board.lines[activePlayerIndex].player;
+  }
+
+  getPlayerCount() {
+    return this.board.lines.filter(line => line.player).length;
+  }
+
   updateGame() {
     const ball = this.board.ball;
     ball.center.x += ball.velocity.x;
@@ -78,8 +121,11 @@ class Game {
       this.checkLineCollision(ball, line);
     });
 
-    const player = this.board.lines[0].player;
-    this.checkPlayerCollision(ball, player);
+    const playerList = this.board.lines.filter(line => line.player)
+      .map(line => line.player);
+    playerList.forEach((player) => {
+      this.checkPlayerCollision(ball, player);
+    });
   }
 
   checkLineCollision(ball, line) {
@@ -130,14 +176,16 @@ class Game {
     }
   }
 
-  updatePosition(x, y) {
-    const player = this.board.lines[0].player;
-    player.a.y = y;
-    player.b.y = y + 30;
+  updatePosition(playerId, x, y) {
+    const activePlayer = this.board.lines.filter(line => line.player)
+      .map(line => line.player)
+      .find(player => player.id === playerId);
+    activePlayer.a.y = y;
+    activePlayer.b.y = y + 30;
   }
 
   sendUpdate() {
-    this.socket.emit('board', this.board);
+    this.gameHolder.emit(this.board);
   }
 
   start() {
