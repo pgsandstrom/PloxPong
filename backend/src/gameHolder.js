@@ -16,6 +16,7 @@ class GameHolder {
 
   startGame() {
     console.log('starting game...');
+    Object.values(this.socketIdToPlayer).forEach(player => player.socket.emit('start'));
     this.game.start();
   }
 
@@ -27,15 +28,15 @@ class GameHolder {
       ready: false,
     };
     this.game.addPlayer(socket.id);
-    // if (this.getPlayerCount() === 1) {
-    //   this.startGame();
-    // }
     this.emitPlayerStatus();
   }
 
   ready(socket) {
     this.socketIdToPlayer[socket.id].ready = true;
     this.emitPlayerStatus();
+    if (Object.values(this.socketIdToPlayer).every(player => player.ready)) {
+      this.startGame();
+    }
   }
 
   unready(socket) {
@@ -46,6 +47,7 @@ class GameHolder {
   setName(socket, name) {
     this.socketIdToPlayer[socket.id].name = name;
     this.emitPlayerStatus();
+    this.game.setName(socket.id, name);
   }
 
   removePlayer(socket) {

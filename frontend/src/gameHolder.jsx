@@ -21,6 +21,11 @@ class GameHolder extends React.Component {
         players,
       });
     });
+    registerListener('start', () => {
+      this.setState({
+        gameStarted: true,
+      });
+    });
   }
 
   render() {
