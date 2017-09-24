@@ -1,11 +1,13 @@
 /* eslint-disable no-param-reassign,no-console */
-
 import {
   bounceCircle,
   isLineIntersectingCircle,
   pointOnLineClosestToCircle,
   dotToDotDistance,
+  moveDot,
 } from './trig';
+
+const PADDEL_LENGTH = 30;
 
 const potentialPlayers = [{
   a: {
@@ -18,17 +20,17 @@ const potentialPlayers = [{
   id: 'abc',
   score: 0,
 },
-{
-  a: {
-    x: 200, y: 0,
+  {
+    a: {
+      x: 200, y: 30,
+    },
+    b: {
+      x: 200, y: 0,
+    },
+    name: 'Anon',
+    id: 'abc',
+    score: 0,
   },
-  b: {
-    x: 200, y: 30,
-  },
-  name: 'Anon',
-  id: 'abc',
-  score: 0,
-},
 ];
 
 class Game {
@@ -50,7 +52,6 @@ class Game {
       },
       lines: [
         {
-          player: null,
           a: {
             x: 0, y: 0,
           },
@@ -59,12 +60,14 @@ class Game {
           },
         },
         {
+          player: null,
           a: {
-            x: 300, y: 0,
+            x: 300, y: 30,
           },
           b: {
             x: 300, y: 300,
-          } },
+          }
+        },
         {
           a: {
             x: 300, y: 300,
@@ -158,6 +161,7 @@ class Game {
     if (isLineIntersectingCircle(ball, player)) {
       const closestPoint = pointOnLineClosestToCircle(ball, player);
       isLineIntersectingCircle(ball, player);
+      // TODO move this math stuff to trig
       const distanceToPlayerLeft = dotToDotDistance(closestPoint, player.a);
       const playerLength = dotToDotDistance(player.a, player.b);
       let percentage = distanceToPlayerLeft / playerLength;
@@ -177,11 +181,24 @@ class Game {
   }
 
   updatePosition(playerId, x, y) {
-    const activePlayer = this.board.lines.filter(line => line.player)
-      .map(line => line.player)
-      .find(player => player.id === playerId);
-    activePlayer.a.y = y;
-    activePlayer.b.y = y + 30;
+    const mouseCircle = {
+      center: {
+        x,
+        y,
+      },
+    };
+    const activeLine = this.board.lines.filter(line => line.player)
+      .find(line => line.player.id === playerId);
+    const activePlayer = activeLine.player;
+    const playerNewCenter = pointOnLineClosestToCircle(mouseCircle, activeLine);
+    const lineDegree = Math.atan2(activeLine.b.y - activeLine.a.y, activeLine.b.x - activeLine.a.x);
+    const lineDegree90 = lineDegree + (Math.PI / 2);
+    moveDot(playerNewCenter, lineDegree90, 10);
+    moveDot(playerNewCenter, lineDegree, PADDEL_LENGTH / 2);
+    const otherDot = { ...playerNewCenter };
+    moveDot(otherDot, lineDegree, -PADDEL_LENGTH);
+    activePlayer.a = playerNewCenter;
+    activePlayer.b = otherDot;
   }
 
   sendUpdate() {

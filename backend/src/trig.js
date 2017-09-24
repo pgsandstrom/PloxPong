@@ -30,13 +30,6 @@ export const moveCircle = (circle) => {
   circle.center.y += circle.velocity.y;
 };
 
-export const distance = (point1, point2) => {
-  const x = point1.x - point2.x;
-  const y = point1.y - point2.y;
-  return Math.sqrt((x * x) + (y * y));
-};
-
-
 export const magnitude = vector => Math.sqrt((vector.x * vector.x) + (vector.y * vector.y));
 
 
@@ -125,8 +118,15 @@ export const isLineIntersectingCircle = (circle, line) => {
   const closest = pointOnLineClosestToCircle(circle, line);
 
 
-  const circleToLineDistance = distance(circle.center, closest);
+  const circleToLineDistance = dotToDotDistance(circle.center, closest);
 
 
   return circleToLineDistance < circle.radius;
+};
+
+export const moveDot = (dot, degree, distance) => {
+  const xDiff = Math.cos(degree);
+  const yDiff = Math.sin(degree);
+  dot.x += xDiff * distance;
+  dot.y += yDiff * distance;
 };
