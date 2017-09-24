@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Game from './game';
+import GameHolder from './gameHolder';
 
 const content = document.getElementById('content');
 
 ReactDOM.render(
-  <Game />,
+  <GameHolder />,
   content,
 );
 

@@ -1,8 +1,16 @@
 import Game from './game';
 
+// eslint-disable-next-line no-unused-vars
+const playerStructure = {
+  id: 'abc',
+  name: 'Anon',
+  socket: null,
+  ready: false,
+};
+
 class GameHolder {
   constructor() {
-    this.socketIdToSocket = {};
+    this.socketIdToPlayer = {};
     this.game = new Game(this);
   }
 
@@ -12,15 +20,36 @@ class GameHolder {
   }
 
   addPlayer(socket) {
-    this.socketIdToSocket[socket.id] = socket;
+    this.socketIdToPlayer[socket.id] = {
+      id: socket.id,
+      name: 'Anon',
+      socket,
+      ready: false,
+    };
     this.game.addPlayer(socket.id);
-    if (this.getPlayerCount() === 1) {
-      this.startGame();
-    }
+    // if (this.getPlayerCount() === 1) {
+    //   this.startGame();
+    // }
+    this.emitPlayerStatus();
+  }
+
+  ready(socket) {
+    this.socketIdToPlayer[socket.id].ready = true;
+    this.emitPlayerStatus();
+  }
+
+  unready(socket) {
+    this.socketIdToPlayer[socket.id].ready = false;
+    this.emitPlayerStatus();
+  }
+
+  setName(socket, name) {
+    this.socketIdToPlayer[socket.id].name = name;
+    this.emitPlayerStatus();
   }
 
   removePlayer(socket) {
-    delete this.socketIdToSocket[socket.id];
+    delete this.socketIdToPlayer[socket.id];
     this.game.removePlayer(socket.id);
     if (this.getPlayerCount() === 0) {
       this.stopGame();
@@ -36,12 +65,20 @@ class GameHolder {
   }
 
   getPlayerCount() {
-    return Object.keys(this.socketIdToSocket).length;
+    return Object.keys(this.socketIdToPlayer).length;
   }
 
-  emit(board) {
-    Object.values(this.socketIdToSocket).forEach((socket) => {
-      socket.emit('board', board);
+  emitPlayerStatus() {
+    const playerList = Object.values(this.socketIdToPlayer).map(player => ({
+      ...player,
+      socket: undefined,
+    }));
+    Object.values(this.socketIdToPlayer).forEach(player => player.socket.emit('players', playerList));
+  }
+
+  emitBoard(board) {
+    Object.values(this.socketIdToPlayer).forEach((player) => {
+      player.socket.emit('board', board);
     });
   }
 }

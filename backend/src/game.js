@@ -195,7 +195,7 @@ class Game {
   }
 
   sendUpdate() {
-    this.gameHolder.emit(this.board);
+    this.gameHolder.emitBoard(this.board);
   }
 
   start() {

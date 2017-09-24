@@ -13,5 +13,7 @@ module.exports = {
     "no-else-return": ["off"], // This prevents 'else {return x}'. I think it sometimes makes the code more logical, so we allow it
     "class-methods-use-this": ["off"], // Allow class methods that does not use this. Sometimes it is easier to read a method as a class method
     "linebreak-style": ["off"], // linebreak style is automatically handled by git, we should not have to care about it
+
+    "jsx-a11y/no-autofocus": ["off"], // I like autofocus
   },
 };

@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import { createWebsocket, sendPosition } from './websocket';
+import { registerListener, sendPosition } from './websocket';
 import { getCanvas, renderBoard } from './render';
 import ScoreList from './scoreList';
 import Canvas from './canvas';
@@ -13,8 +12,6 @@ class Game extends React.Component {
     this.onBoard = this.onBoard.bind(this);
   }
   componentDidMount() {
-    console.log('componentDidMount');
-
     // TODO chill if too many events are created
     // TODO make the code not super ugly :)
     const rect = getCanvas().getBoundingClientRect();
@@ -23,7 +20,8 @@ class Game extends React.Component {
       const y = e.clientY - rect.top;
       sendPosition(x, y);
     };
-    createWebsocket(this.onBoard);
+
+    registerListener('board', this.onBoard);
   }
   onBoard(board) {
     renderBoard(board);
