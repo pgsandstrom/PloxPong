@@ -2,18 +2,18 @@
 import socketio from 'socket.io-client';
 
 import serverUrl from './serverUrl';
-import { render } from './render';
 
 let websocket;
 
-export const createWebsocket = () => {
+export const createWebsocket = (onBoard) => {
   console.log(`connecting to ${serverUrl()}`);
   const socket = socketio(serverUrl());
   socket.on('connect', () => {
     console.log('connected to server');
   });
   socket.on('board', (board) => {
-    render(board);
+    console.log('socket on board');
+    onBoard(board);
   });
   socket.on('disconnect', () => {
     console.log('Websocket disconnected');
@@ -24,8 +24,6 @@ export const createWebsocket = () => {
   });
   websocket = socket;
 };
-
-export const getWebsocket = () => websocket;
 
 export const sendPosition = (x, y) => {
   sendEvent('position', { x, y });

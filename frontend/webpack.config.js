@@ -8,7 +8,7 @@ module.exports = {
     'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
     'react-hot-loader/patch',
     'whatwg-fetch',
-    './src',
+    './src/index.jsx',
   ],
   output: { path: path.join(__dirname, '/assets/'), publicPath: '/assets/', filename: 'bundle_dev.js' },
   module: {

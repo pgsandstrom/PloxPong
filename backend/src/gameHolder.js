@@ -7,6 +7,7 @@ class GameHolder {
   }
 
   startGame() {
+    console.log('starting game...');
     this.game.start();
   }
 

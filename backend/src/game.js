@@ -82,6 +82,7 @@ class Game {
     const currentPlayerCount = this.getPlayerCount();
     const newPlayer = _.cloneDeep(playerStructure);
     newPlayer.id = playerId;
+    newPlayer.name += newPlayer.id;
     // TODO: Check the first spot that is free instead...
     switch (currentPlayerCount) {
       case 0:
@@ -91,13 +92,16 @@ class Game {
         this.board.lines[3].player = newPlayer;
         break;
       default:
-        throw new Error('wtf');
+        throw new Error(`Too many players: ${currentPlayerCount}`);
     }
     this.updatePosition(playerId, 250, 250);
   }
 
   removePlayer(playerId) {
     const activePlayerIndex = this.board.lines.findIndex(line => line.player && line.player.id === playerId);
+    if (this.board.lines[activePlayerIndex] == null) {
+      console.log('error');
+    }
     delete this.board.lines[activePlayerIndex].player;
   }
 
@@ -195,7 +199,6 @@ class Game {
   }
 
   start() {
-    console.log('start');
     this.startTime = Date.now();
     this.running = true;
     this.cycle();
