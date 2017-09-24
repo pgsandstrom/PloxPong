@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { createWebsocket, registerListener, getId, sendName } from './websocket';
+import { createWebsocket, registerListener, getId, sendName, sendReady } from './websocket';
 
 import Game from './game';
 
@@ -50,7 +50,7 @@ class Player extends React.Component {
     }
     if (this.props.player.id === id) {
       return (<div>
-        <button>
+        <button onClick={() => sendReady(!this.props.player.ready)}>
           {icon}
         </button>
         <input

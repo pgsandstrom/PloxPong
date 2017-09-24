@@ -29,6 +29,10 @@ export const sendName = (name) => {
   sendEvent('name', { name });
 };
 
+export const sendReady = (ready) => {
+  sendEvent('ready', { ready });
+};
+
 export const registerListener = (event, func) => {
   websocket.on(event, func);
 };

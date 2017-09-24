@@ -12,10 +12,11 @@ export default (io) => {
 
     activeSockets[socket.id] = {};
     socket.on('ready', (data) => {
-      gameHolder.ready(socket, data.x, data.y);
-    });
-    socket.on('unready', (data) => {
-      gameHolder.unready(socket, data.x, data.y);
+      if (data.ready) {
+        gameHolder.ready(socket);
+      } else {
+        gameHolder.unready(socket);
+      }
     });
     socket.on('name', (data) => {
       gameHolder.setName(socket, data.name);
