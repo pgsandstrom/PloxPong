@@ -1,4 +1,6 @@
 /* eslint-disable no-param-reassign,no-console */
+import _ from 'lodash';
+
 import {
   bounceCircle,
   isLineIntersectingCircle,
@@ -9,29 +11,17 @@ import {
 
 const PADDEL_LENGTH = 30;
 
-const potentialPlayers = [{
+const playerStructure = {
   a: {
-    x: 30, y: 0,
+    x: 0, y: 0,
   },
   b: {
-    x: 30, y: 30,
+    x: 0, y: 0,
   },
   name: 'Anon',
   id: 'abc',
   score: 0,
-},
-  {
-    a: {
-      x: 200, y: 30,
-    },
-    b: {
-      x: 200, y: 0,
-    },
-    name: 'Anon',
-    id: 'abc',
-    score: 0,
-  },
-];
+};
 
 class Game {
   constructor(gameHolder) {
@@ -62,11 +52,11 @@ class Game {
         {
           player: null,
           a: {
-            x: 300, y: 30,
+            x: 300, y: 0,
           },
           b: {
             x: 300, y: 300,
-          }
+          },
         },
         {
           a: {
@@ -90,10 +80,8 @@ class Game {
 
   addPlayer(playerId) {
     const currentPlayerCount = this.getPlayerCount();
-    const newPlayer = {
-      ...potentialPlayers[currentPlayerCount],
-      id: playerId,
-    };
+    const newPlayer = _.cloneDeep(playerStructure);
+    newPlayer.id = playerId;
     // TODO: Check the first spot that is free instead...
     switch (currentPlayerCount) {
       case 0:
@@ -105,6 +93,7 @@ class Game {
       default:
         throw new Error('wtf');
     }
+    this.updatePosition(playerId, 250, 250);
   }
 
   removePlayer(playerId) {
