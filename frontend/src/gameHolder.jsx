@@ -42,16 +42,34 @@ class Player extends React.Component {
   }
   render() {
     const id = getId();
-    if (this.props.player.id === id) {
-      return (<input
-        name="username"
-        placeholder="write your name already"
-        onChange={this.handleUsernameChange}
-        autoFocus
-        className="standard-input"
-      />);
+    let icon;
+    if (this.props.player.ready) {
+      icon = <i className="fa fa-check" aria-hidden="true" />;
     } else {
-      return <div key={this.props.player.id} className="player">{this.props.player.name}</div>;
+      icon = <i className="fa fa-times" aria-hidden="true" />;
+    }
+    if (this.props.player.id === id) {
+      return (<div>
+        <button>
+          {icon}
+        </button>
+        <input
+          name="username"
+          placeholder="write your name already"
+          onChange={this.handleUsernameChange}
+          autoFocus
+          className="standard-input"
+        />
+      </div>);
+    } else {
+      return (<div key={this.props.player.id} className="player">
+        <button disabled>
+          {icon}
+        </button>
+        <span>
+          {this.props.player.name}
+        </span>
+      </div>);
     }
   }
 }

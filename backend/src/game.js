@@ -100,7 +100,8 @@ class Game {
   removePlayer(playerId) {
     const activePlayerIndex = this.board.lines.findIndex(line => line.player && line.player.id === playerId);
     if (this.board.lines[activePlayerIndex] == null) {
-      console.log('error');
+      // TODO this happens sometimes... why?
+      console.log(`error with index ${activePlayerIndex}`);
     }
     delete this.board.lines[activePlayerIndex].player;
   }
