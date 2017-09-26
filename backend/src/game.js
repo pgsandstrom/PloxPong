@@ -7,6 +7,7 @@ import {
   pointOnLineClosestToCircle,
   dotToDotDistance,
   moveDot,
+  getLineLength,
 } from './trig';
 
 const PADDEL_LENGTH = 30;
@@ -43,16 +44,16 @@ class Game {
       lines: [
         {
           a: {
-            x: 0, y: 0,
+            x: 10, y: 10,
           },
           b: {
-            x: 300, y: 0,
+            x: 300, y: 10,
           },
         },
         {
           player: null,
           a: {
-            x: 300, y: 0,
+            x: 300, y: 10,
           },
           b: {
             x: 300, y: 300,
@@ -63,19 +64,38 @@ class Game {
             x: 300, y: 300,
           },
           b: {
-            x: 0, y: 300,
+            x: 10, y: 300,
           },
         },
         {
           a: {
-            x: 0, y: 300,
+            x: 10, y: 300,
           },
           b: {
-            x: 0, y: 0,
+            x: 10, y: 10,
           },
         },
       ],
     };
+  }
+
+  changeToLineCount(newLineCount) {
+    const currentLines = [...this.board.lines];
+    const currentLineCount = currentLines.length;
+    const ratio = newLineCount / currentLineCount;
+    let newLinesAdded = 0;
+    currentLines.forEach((line, index) => {
+      let splitLineCount = 0;
+      while (newLinesAdded < (index + 1) * (ratio - 1)) {
+        newLinesAdded += 1;
+        splitLineCount += 1;
+      }
+      const newLineLength = getLineLength(line) / (splitLineCount + 1);
+      // TODO shorten line
+      for (let i = 0; i < splitLineCount; i++) { // eslint-disable-line no-plusplus
+        // TODO add lines
+      }
+    });
   }
 
   addPlayer(playerId) {

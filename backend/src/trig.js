@@ -108,6 +108,8 @@ export const pointOnLineClosestToCircle = (circle, line) => {
   }
 };
 
+export const getLineLength = line => dotToDotDistance(line.a, line.b);
+
 export const dotToDotDistance = (dot1, dot2) => {
   const xDiff = dot1.x - dot2.x;
   const yDiff = dot1.y - dot2.y;

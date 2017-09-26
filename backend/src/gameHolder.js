@@ -1,5 +1,7 @@
 import Game from './game';
 
+const START_GAME_IMMEDIATLY = true;
+
 // eslint-disable-next-line no-unused-vars
 const playerStructure = {
   id: 'abc',
@@ -25,10 +27,13 @@ class GameHolder {
       id: socket.id,
       name: 'Anon',
       socket,
-      ready: false,
+      ready: true,
     };
     this.game.addPlayer(socket.id);
     this.emitPlayerStatus();
+    if (START_GAME_IMMEDIATLY) {
+      this.startGame();
+    }
   }
 
   ready(socket) {
