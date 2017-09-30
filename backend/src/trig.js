@@ -32,6 +32,16 @@ export const moveCircle = (circle) => {
 
 export const magnitude = vector => Math.sqrt((vector.x * vector.x) + (vector.y * vector.y));
 
+export const unitVectorLine = (line) => {
+  const vector = {
+    x: line.b.x - line.a.x,
+    y: line.b.y - line.a.y,
+  };
+  return ({
+    x: vector.x / magnitude(vector),
+    y: vector.y / magnitude(vector),
+  });
+};
 
 export const unitVector = vector => ({
   x: vector.x / magnitude(vector),

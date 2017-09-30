@@ -8,6 +8,7 @@ import {
   dotToDotDistance,
   moveDot,
   getLineLength,
+  unitVectorLine,
 } from './trig';
 
 const PADDEL_LENGTH = 30;
@@ -90,12 +91,74 @@ class Game {
         newLinesAdded += 1;
         splitLineCount += 1;
       }
-      const newLineLength = getLineLength(line) / (splitLineCount + 1);
-      // TODO shorten line
+      const lineLength = getLineLength(line);
+      const newLineLength = lineLength / (splitLineCount + 1);
+      const lineVector = unitVectorLine(line);
+      line.b.x = line.a.x + (lineVector.x * newLineLength);
+      line.b.y = line.a.y + (lineVector.y * newLineLength);
       for (let i = 0; i < splitLineCount; i++) { // eslint-disable-line no-plusplus
-        // TODO add lines
+        const newLine = {
+          a: {
+            x: line.a.x + (lineVector.x * newLineLength * (i + 1)),
+            y: line.a.y + (lineVector.y * newLineLength * (i + 1)),
+          },
+          b: {
+            x: line.a.x + (lineVector.x * newLineLength * (i + 2)),
+            y: line.a.y + (lineVector.y * newLineLength * (i + 2)),
+          },
+        };
+        this.board.lines.splice(index + i, 0, newLine);
       }
     });
+    this.updateLineGoal();
+  }
+
+  updateLineGoal() {
+    const currentLineCount = this.board.lines.length;
+    this.board.lines.forEach((line, index) => {
+      switch (currentLineCount) { // eslint-disable-line default-case
+        case 3:
+          switch (index) { // eslint-disable-line default-case
+            case 0:
+              this.setLineGoal(line, 10, 10, 300, 10);
+              break;
+            case 1:
+              this.setLineGoal(line, 300, 10, 300, 300);
+              break;
+            case 2:
+              this.setLineGoal(line, 300, 300, 10, 10);
+              break;
+          }
+          break;
+        case 4:
+          switch (index) { // eslint-disable-line default-case
+            case 0:
+              this.setLineGoal(line, 10, 10, 400, 10);
+              break;
+            case 1:
+              this.setLineGoal(line, 400, 10, 300, 300);
+              break;
+            case 2:
+              this.setLineGoal(line, 300, 300, 10, 300);
+              break;
+            case 3:
+              this.setLineGoal(line, 10, 300, 10, 10);
+              break;
+          }
+          break;
+      }
+    });
+  }
+
+  setLineGoal(line, ax, ay, bx, by) {
+    line.goal = {
+      a: {
+        x: ax, y: ay,
+      },
+      b: {
+        x: bx, y: by,
+      },
+    };
   }
 
   addPlayer(playerId) {
@@ -114,6 +177,7 @@ class Game {
         throw new Error(`Too many players: ${currentPlayerCount}`);
     }
     this.updatePosition(playerId, 250, 250);
+    this.changeToLineCount(3);
   }
 
   setName(playerId, name) {
@@ -147,6 +211,38 @@ class Game {
       .map(line => line.player);
     playerList.forEach((player) => {
       this.checkPlayerCollision(ball, player);
+    });
+
+    if (this.turn % 10 === 0) {
+      this.updateLinePositions();
+    }
+  }
+
+  updateLinePositions() {
+    this.board.lines.forEach((line) => {
+      if (line.goal == null) {
+        return;
+      }
+      if (line.goal.a.x > line.a.x) {
+        line.a.x += 1;
+      } else if (line.goal.a.x < line.a.x) {
+        line.a.x -= 1;
+      }
+      if (line.goal.a.y > line.a.y) {
+        line.a.y += 1;
+      } else if (line.goal.a.y < line.a.y) {
+        line.a.y -= 1;
+      }
+      if (line.goal.b.x > line.b.x) {
+        line.b.x += 1;
+      } else if (line.goal.b.x < line.b.x) {
+        line.b.x -= 1;
+      }
+      if (line.goal.b.y > line.b.y) {
+        line.b.y += 1;
+      } else if (line.goal.b.y < line.b.y) {
+        line.b.y -= 1;
+      }
     });
   }
 

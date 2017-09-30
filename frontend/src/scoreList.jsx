@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const ScoreList = props =>
   (<div>
-    {props.players.map(player => <Player key={player.name} player={player} />)}
+    {props.players.map(player => <Player key={player.id} player={player} />)}
   </div>);
 ScoreList.propTypes = {
   players: PropTypes.array.isRequired,

@@ -14,5 +14,11 @@ describe('game', () => {
         },
       }];
     game.changeToLineCount(8);
+    // console.log(game.board.lines[0].b.x);
+    // console.log(game.board.lines[0].b.y);
+    game.board.lines.forEach((line) => {
+      // console.log(`${line.a.x},${line.a.y} - ${line.b.x},${line.b.y}`);
+      console.log(`${line.a.x} =>\t${line.b.x}\t\t${line.a.y} =>\t${line.b.y}`);
+    });
   });
 });
