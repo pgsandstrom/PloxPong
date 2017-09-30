@@ -108,7 +108,7 @@ class Game {
             y: line.a.y + (lineVector.y * newLineLength * (i + 2)),
           },
         };
-        this.board.lines.splice(index + i, 0, newLine);
+        this.board.lines.splice(index + i + 1, 0, newLine);
       }
     });
     this.updateLineGoal();
@@ -351,6 +351,6 @@ class Game {
   }
 }
 
-const getRandom = (min, max) => (Math.random() * (max - min)) + min;
+const getRandom = (min, max) => Math.floor(Math.random() * ((max - min) + 1)) + min;
 
 export default Game;
