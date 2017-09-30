@@ -10,6 +10,7 @@ import {
   getLineLength,
   unitVectorLine,
 } from './trig';
+import { moveLines } from './lineMoving';
 
 const PADDEL_LENGTH = 30;
 
@@ -146,6 +147,25 @@ class Game {
               break;
           }
           break;
+        case 5:
+          switch (index) { // eslint-disable-line default-case
+            case 0:
+              this.setLineGoal(line, 100, 10, 300, 10);
+              break;
+            case 1:
+              this.setLineGoal(line, 300, 10, 400, 250);
+              break;
+            case 2:
+              this.setLineGoal(line, 400, 250, 300, 400);
+              break;
+            case 3:
+              this.setLineGoal(line, 300, 400, 10, 300);
+              break;
+            case 4:
+              this.setLineGoal(line, 10, 300, 100, 10);
+              break;
+          }
+          break;
       }
     });
   }
@@ -213,37 +233,14 @@ class Game {
       this.checkPlayerCollision(ball, player);
     });
 
-    if (this.turn % 10 === 0) {
-      this.updateLinePositions();
-    }
+    this.updateLinePositions();
   }
 
   updateLinePositions() {
-    this.board.lines.forEach((line) => {
-      if (line.goal == null) {
-        return;
-      }
-      if (line.goal.a.x > line.a.x) {
-        line.a.x += 1;
-      } else if (line.goal.a.x < line.a.x) {
-        line.a.x -= 1;
-      }
-      if (line.goal.a.y > line.a.y) {
-        line.a.y += 1;
-      } else if (line.goal.a.y < line.a.y) {
-        line.a.y -= 1;
-      }
-      if (line.goal.b.x > line.b.x) {
-        line.b.x += 1;
-      } else if (line.goal.b.x < line.b.x) {
-        line.b.x -= 1;
-      }
-      if (line.goal.b.y > line.b.y) {
-        line.b.y += 1;
-      } else if (line.goal.b.y < line.b.y) {
-        line.b.y -= 1;
-      }
-    });
+    const movedLine = moveLines(this.board.lines);
+    if (movedLine === false) {
+      this.changeToLineCount(getRandom(3, 5));
+    }
   }
 
   checkLineCollision(ball, line) {
@@ -354,5 +351,6 @@ class Game {
   }
 }
 
+const getRandom = (min, max) => (Math.random() * (max - min)) + min;
 
 export default Game;
