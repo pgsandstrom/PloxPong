@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-const LINE_MOVE_SPEED = 0.1;
+const LINE_MOVE_SPEED = 0.3;
 
 // eslint-disable-next-line import/prefer-default-export
 export const moveLines = (lines) => {

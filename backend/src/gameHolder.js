@@ -65,6 +65,7 @@ class GameHolder {
 
   stopGame() {
     this.game.stop();
+    this.game = new Game(this);
   }
 
   updatePosition(socket, x, y) {

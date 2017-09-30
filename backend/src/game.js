@@ -82,8 +82,22 @@ class Game {
   }
 
   changeToLineCount(newLineCount) {
+    // TODO Fix removing of lines
+    // TODO move player with lines even when not moving mouse
+    const currentLineCount = this.board.lines.length;
+    if (newLineCount > currentLineCount) {
+      this.addLines(newLineCount);
+      this.updateLineGoal();
+    } else if (newLineCount < currentLineCount) {
+      this.removeLines(newLineCount);
+      // this.updateLineGoal();
+    }
+  }
+
+  addLines(newLineCount) {
     const currentLines = [...this.board.lines];
     const currentLineCount = currentLines.length;
+    console.log(`increasing from ${currentLineCount} to ${newLineCount}`);
     const ratio = newLineCount / currentLineCount;
     let newLinesAdded = 0;
     currentLines.forEach((line, index) => {
@@ -111,7 +125,34 @@ class Game {
         this.board.lines.splice(index + i + 1, 0, newLine);
       }
     });
-    this.updateLineGoal();
+  }
+
+  removeLines(newLineCount) {
+    const currentLines = this.board.lines;
+    const currentLineCount = currentLines.length;
+    console.log(`decreasing from ${currentLineCount} to ${newLineCount}`);
+    const ratio = newLineCount / currentLineCount;
+    let removedLines = 0;
+    currentLines.forEach((line, index) => {
+      if (line.player != null) {
+        return;
+      }
+      while (removedLines / (1 - ratio) < (index + 1)) {
+        // console.log(`remove line at ${index}`);
+        removedLines += 1;
+        // TODO find the positions on the other premade boards instead u know...
+        // const prevLine = index === 0 ? currentLines[currentLineCount - 1] : currentLines[index - 1];
+        const nextLine = index === currentLineCount - 1 ? currentLines[0] : currentLines[index + 1];
+        // prevLine.goal.b = {... line.b};
+        nextLine.goal = {};
+        nextLine.goal.a = { ...line.a };
+        nextLine.goal.b = { ...nextLine.b };
+        line.goal = {};
+        line.goal.a = { ...line.a };
+        line.goal.b = { ...line.a };
+      }
+    });
+    console.log('done');
   }
 
   updateLineGoal() {
@@ -134,10 +175,10 @@ class Game {
         case 4:
           switch (index) { // eslint-disable-line default-case
             case 0:
-              this.setLineGoal(line, 10, 10, 400, 10);
+              this.setLineGoal(line, 10, 10, 300, 10);
               break;
             case 1:
-              this.setLineGoal(line, 400, 10, 300, 300);
+              this.setLineGoal(line, 300, 10, 300, 300);
               break;
             case 2:
               this.setLineGoal(line, 300, 300, 10, 300);
@@ -197,7 +238,6 @@ class Game {
         throw new Error(`Too many players: ${currentPlayerCount}`);
     }
     this.updatePosition(playerId, 250, 250);
-    this.changeToLineCount(3);
   }
 
   setName(playerId, name) {
@@ -237,6 +277,7 @@ class Game {
   }
 
   updateLinePositions() {
+    this.board.lines = this.board.lines.filter(line => line.a.x !== line.b.x || line.a.y !== line.b.y);
     const movedLine = moveLines(this.board.lines);
     if (movedLine === false) {
       this.changeToLineCount(getRandom(3, 5));
