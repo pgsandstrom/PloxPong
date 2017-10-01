@@ -82,7 +82,6 @@ class Game {
   }
 
   changeToLineCount(newLineCount) {
-    // TODO Fix removing of lines
     // TODO move player with lines even when not moving mouse
     const currentLineCount = this.board.lines.length;
     if (newLineCount > currentLineCount) {
@@ -95,9 +94,10 @@ class Game {
   }
 
   addLines(newLineCount) {
+    // TODO adding can happen in the wrong order or something ;_;
     const currentLines = [...this.board.lines];
     const currentLineCount = currentLines.length;
-    console.log(`increasing from ${currentLineCount} to ${newLineCount}`);
+    // console.log(`increasing from ${currentLineCount} to ${newLineCount}`);
     const ratio = newLineCount / currentLineCount;
     let newLinesAdded = 0;
     currentLines.forEach((line, index) => {
@@ -130,7 +130,7 @@ class Game {
   removeLines(newLineCount) {
     const currentLines = this.board.lines;
     const currentLineCount = currentLines.length;
-    console.log(`decreasing from ${currentLineCount} to ${newLineCount}`);
+    // console.log(`decreasing from ${currentLineCount} to ${newLineCount}`);
     const ratio = newLineCount / currentLineCount;
     let removedLines = 0;
     currentLines.forEach((line, index) => {
@@ -144,15 +144,16 @@ class Game {
         // const prevLine = index === 0 ? currentLines[currentLineCount - 1] : currentLines[index - 1];
         const nextLine = index === currentLineCount - 1 ? currentLines[0] : currentLines[index + 1];
         // prevLine.goal.b = {... line.b};
+        const oldLinegoal = line.goal;
+        const oldNextLinegoal = nextLine.goal;
         nextLine.goal = {};
-        nextLine.goal.a = { ...line.a };
-        nextLine.goal.b = { ...nextLine.b };
+        nextLine.goal.a = oldLinegoal ? { ...oldLinegoal.a } : { ...line.a };
+        nextLine.goal.b = oldNextLinegoal ? { ...oldNextLinegoal.b } : { ...nextLine.b };
         line.goal = {};
-        line.goal.a = { ...line.a };
-        line.goal.b = { ...line.a };
+        line.goal.a = oldLinegoal ? { ...oldLinegoal.a } : { ...line.a };
+        line.goal.b = oldLinegoal ? { ...oldLinegoal.a } : { ...line.a };
       }
     });
-    console.log('done');
   }
 
   updateLineGoal() {
