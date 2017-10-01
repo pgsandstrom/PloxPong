@@ -10,7 +10,7 @@ import {
   getLineLength,
   unitVectorLine,
 } from './trig';
-import {moveLines} from './lineMoving';
+import { moveLines } from './lineMoving';
 
 const PADDEL_LENGTH = 30;
 
@@ -273,7 +273,14 @@ class Game {
       this.checkPlayerCollision(ball, player);
     });
 
-    this.updateLinePositions();
+    const movedLine = this.updateLinePositions();
+    if (movedLine) {
+      this.board.lines.forEach((line) => {
+        if (line.player) {
+          this.updatePosition(line.player.id, line.player.mouse.center.x, line.player.mouse.center.y);
+        }
+      });
+    }
   }
 
   updateLinePositions() {
@@ -286,6 +293,7 @@ class Game {
       }
       this.changeToLineCount(random);
     }
+    return movedLine;
   }
 
   checkLineCollision(ball, line) {
@@ -356,6 +364,7 @@ class Game {
     moveDot(otherDot, lineDegree, -PADDEL_LENGTH);
     activePlayer.a = playerNewCenter;
     activePlayer.b = otherDot;
+    activePlayer.mouse = mouseCircle;
   }
 
   sendUpdate() {
