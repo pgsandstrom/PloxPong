@@ -10,7 +10,7 @@ import {
   getLineLength,
   unitVectorLine,
 } from './trig';
-import { moveLines } from './lineMoving';
+import {moveLines} from './lineMoving';
 
 const PADDEL_LENGTH = 30;
 
@@ -94,7 +94,6 @@ class Game {
   }
 
   addLines(newLineCount) {
-    // TODO adding can happen in the wrong order or something ;_;
     const currentLines = [...this.board.lines];
     const currentLineCount = currentLines.length;
     // console.log(`increasing from ${currentLineCount} to ${newLineCount}`);
@@ -122,7 +121,7 @@ class Game {
             y: line.a.y + (lineVector.y * newLineLength * (i + 2)),
           },
         };
-        this.board.lines.splice(index + i + 1, 0, newLine);
+        this.board.lines.splice(index + i + newLinesAdded, 0, newLine);
       }
     });
   }
@@ -281,7 +280,11 @@ class Game {
     this.board.lines = this.board.lines.filter(line => line.a.x !== line.b.x || line.a.y !== line.b.y);
     const movedLine = moveLines(this.board.lines);
     if (movedLine === false) {
-      this.changeToLineCount(getRandom(3, 5));
+      let random = getRandom(3, 5);
+      if (random === 4) {
+        random = 5;
+      }
+      this.changeToLineCount(random);
     }
   }
 
